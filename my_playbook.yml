@@ -1,0 +1,13 @@
+---
+#  test playbook
+
+- name : playbook test
+    hosts : all
+    tasks :
+        - name : Create file
+            file :
+                path : {{ FILE_REPERTORY }}
+                state : touch
+                owner : root
+                group : root
+                mode : 0600
