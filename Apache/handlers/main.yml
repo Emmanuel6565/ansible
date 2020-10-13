@@ -1,0 +1,14 @@
+---
+# handlers file for Apache
+- name: start apache server
+  service:
+    name: httpd
+    state: started
+  become: yes
+  become_user: root
+- name: restart apache server
+  service:
+    name: httpd
+    state: restarted
+  become: yes
+  become_user: root

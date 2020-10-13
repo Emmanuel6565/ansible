@@ -1,0 +1,4 @@
+[ansible]
+34.68.142.177
+[ansible:vars]
+ansible_user=emmanuelassamoi65

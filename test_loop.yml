@@ -1,0 +1,11 @@
+---
+- hosts: ansible
+  vars:
+    myvar:
+      - { name: "essai1", group: "a" }
+      - { name: "essai2", group: "b" }  
+  tasks:
+    - name: loop test
+      shell:
+        cmd: echo "{{ item.group }}"
+      loop: "{{ myvar }}"

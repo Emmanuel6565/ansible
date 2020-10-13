@@ -1,0 +1,49 @@
+---
+# tasks file for Apache
+- name: Update system repositories
+  dnf:
+    name: '*'
+    state: latest
+    update_cache: yes
+  tags: repo
+  become: yes
+  become_user: root
+- name: Install EPEL repositories
+  dnf:
+    name: epel-release
+    state: present
+  become: yes
+  become_user: root
+  tags: repo
+- name: install apache2
+  dnf:
+    name: httpd
+    state: latest
+  notify:
+    - start apache server
+  tags: apache installation
+  become: yes
+  become_user: root
+- name:  create a conf file for the reverse proxy
+  template:
+    src: conf.j2
+    dest: /etc/httpd/conf.d/reverse.conf
+    owner: apache
+    mode: u=rwx,g=rx,o=rx
+  notify: restart apache server
+  become: yes
+  tags: reverse-proxy
+- name: enable module for reverse proxy
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ httpd_mod }}"
+  tags: enable_module
+  notify: restart apache server
+    
+
+  
+
+
+
+  

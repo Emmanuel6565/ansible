@@ -1,0 +1,14 @@
+---
+# vars file for Apache
+httpd_mod:
+  - proxy
+  - proxy_http
+  - proxy_balancer
+  - lbmethod_byrequests  
+  - headers
+  - rewrite
+  - deflate
+  - proxy_connect
+weblog_cluster_memb:
+  - http://weblogic1
+  - http://weblogic2

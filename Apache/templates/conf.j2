@@ -1,0 +1,12 @@
+ <VirtualHost *:80>
+    ProxyRequests Off
+    ProxyTimeout 120
+    ProxyPreserveHost On
+    ProxyPass "/"   balancer://weblogiccluster
+    ProxyPassReverse "/" balancer://weblogiccluster
+    <Proxy "balancer://weblogiccluster">
+        {% for item in weblog_cluster_memb %}
+            BalancerMember {{ item }}
+        {% endfor %}
+    </Proxy>
+</VirtualHost>
