@@ -24,22 +24,51 @@
   tags: apache installation
   become: yes
   become_user: root
-- name:  create a conf file for the reverse proxy
-  template:
-    src: conf.j2
-    dest: /etc/httpd/conf.d/reverse.conf
-    owner: apache
-    mode: u=rwx,g=rx,o=rx
-  notify: restart apache server
-  become: yes
-  tags: reverse-proxy
 - name: enable module for reverse proxy
   apache2_module:
     name: "{{ item }}"
     state: present
   loop: "{{ httpd_mod }}"
   tags: enable_module
+- name: create directory for conf file
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: apache
+    mode: u=rwx,g=rx,o=rx
+  loop: "{{ conf_dir }}"
+  become: yes
+  tags: conf directory
+- name:  create a conf file for the reverse proxy
+  template:
+    src: conf.j2
+    dest: "{{ conf_dir[0] }}/reverse.conf"
+    owner: apache
+    mode: u=rwx,g=rx,o=rx
   notify: restart apache server
+  become: yes
+  tags: reverse-proxy
+- name: enable conf file
+  file:
+    src: "{{ conf_dir[0] }}/reverse.conf"
+    dest: "{{ conf_dir[1] }}/reverse.conf"
+    state: link
+    owner: apache
+    mode: u=rwx,g=rx,o=rx
+  become: yes
+  tags: enable conf
+- name: include conf file
+  blockinfile:
+    path: /etc/httpd/conf/httpd.conf
+    block: |
+      IncludeOptional "{{ conf_dir[1] }}/*.conf"
+    insertafter: EOF
+    backup: yes
+  notify: restart apache server
+  become: yes
+  tags: modify httpd conf
+
+
     
 
   

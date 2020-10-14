@@ -12,3 +12,7 @@ httpd_mod:
 weblog_cluster_memb:
   - http://weblogic1
   - http://weblogic2
+conf_dir:
+  - /etc/httpd/available_conf
+  - /etc/httpd/enable_conf
+
